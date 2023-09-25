@@ -1,0 +1,11 @@
+CREATE TABLE usage_data.energy_data_usage (
+    id INT PRIMARY KEY,
+    device_1 DOUBLE,
+    device_2 DOUBLE,
+    device_3 DOUBLE,
+    device_4 DOUBLE
+);
+
+INSERT INTO energy_data_usage (id, device_1, device_2, device_3, device_4)
+VALUES  (1, 2711.50, 25253.22, 23654.55, 23003.61),
+        (2, 22456.76, 24654.98, 15789.65, 21789.67);
