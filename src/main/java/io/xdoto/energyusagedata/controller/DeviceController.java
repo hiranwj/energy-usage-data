@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,24 +26,42 @@ public class DeviceController {
 
     @GetMapping("/getDevices")
     public List<Device> getDevice() {
-        List<Device> device = (List<Device>) deviceRepository.findAll();
+        List<Device> device = deviceRepository.findAll();
         return device;
     }
 
     @GetMapping("/pdf/export")
     public void createPDF(HttpServletResponse response) throws IOException, JRException {
-        response.setContentType("application/pdf");
-//       DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-//       String currentDateTime = dateFormatter.format(new Date());
-//
-//       String headerKey = "Content-Disposition";
-//       String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
-//       response.setHeader(headerKey, headerValue);
 
-        // Export the report to PDF
-//        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=chart_report.pdf");
+       // Export the report to PDF
+       response.setContentType("application/pdf");
+
+       DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+       String currentDateTime = dateFormatter.format(new Date());
+
+       String headerKey = "Content-Disposition";
+       String headerValue = "attachment; filename=device_" + currentDateTime + ".pdf";
+       response.setHeader(headerKey, headerValue);
+
+//        response.setHeader("Content-Disposition", "attachment; filename=device_pdf_report.pdf");
 
         deviceService.exportJasperReport(response);
+    }
+
+    @GetMapping("/excel/export")
+    public void generateExcelReport(HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/octet-stream");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=device_" + currentDateTime + ".xls";
+        response.setHeader(headerKey, headerValue);
+
+//        response.setHeader("Content-Disposition", "attachment; filename=device_excel_report.pdf");
+
+        deviceService.exportExcel(response);
     }
 }
